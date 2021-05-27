@@ -40,4 +40,4 @@ noise_level: 0.1                  # Stdev defined for Gaussian noise
 
 # Data
 n_classes: 10                     # Number of classes in the data 
-training_data_ratio: 1.0          # Percentage of training set to be used as training - The rest will be used for validation
+training_data_ratio: 0.99          # Percentage of training set to be used as training - The rest will be used for validation
