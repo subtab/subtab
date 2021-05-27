@@ -125,8 +125,8 @@ def evalulate_models(data_loader, model, config, plot_suffix="_Test", mode='trai
     plot_clusters(config, z, clabels[0],  plot_suffix="_inLatentSpace_" + plot_suffix)
 
     if mode == 'test':
-        # Trained on domain 2, and tested on translation from domain 1 i.e. 1->2
-        print(20 * "*" + "Classification test in data space" + 20 * "*")
+        # Classification scores using Logistig Regression
+        print(20 * "*" + " Classification scores using embeddings " + 20 * "*")
         x_test_hat = z
         y_test = clabels[0]
         linear_model_eval(config, x_train_hat, y_train, x_test_hat, y_test,
