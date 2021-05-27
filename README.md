@@ -1,16 +1,24 @@
-### Hi there 👋
+# Environment
+We used Python 3.7 for our experiments. The environment can be set up by following three steps:
+1. Install pipenv using pip
+2. Activate virtual environment
+3. Install required packages 
 
-<!--
-**subtab/subtab** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+You can run following commands to set up the environment:
+```
+pip install pipenv             # To install pipenv if you don't have it already
+pipenv shell                   # To activate virtual env
+pipenv install --skip-lock     # To install required packages. 
+```
 
-Here are some ideas to get you started:
+If the last step results in issues, you can install packages in Pipfile individually by using pip i.e. "pip install package_name". 
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+# Training & Evaluation
+You can train the model using:
+```
+python train.py 
+```
+This will also run evaluation at the end of the training. You can also run evaluation separately by using:
+```
+python eval.py 
+```
