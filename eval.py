@@ -130,7 +130,7 @@ def evalulate_models(data_loader, model, config, plot_suffix="_Test", mode='trai
         x_test_hat = z
         y_test = clabels[0]
         linear_model_eval(config, x_train_hat, y_train, x_test_hat, y_test,
-                          description="Train and Test scores:")
+                          description="Results for Logistic Reg. trained on the representations of training set and tested on that of test set:")
 
     x_train_hat = z
     y_train = clabels[0]
