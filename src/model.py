@@ -81,11 +81,8 @@ class SubTab:
         return model
 
     def fit(self, data_loader):
-        """Fits model to the data
-
-        Args:
-            data_loaders (list): List of dataloaders for multiple datasets.
-        """
+        """Fits model to the data"""
+        
         # Get data loaders for three datasets
         train_loader = data_loader.train_loader
         validation_loader = data_loader.validation_loader
