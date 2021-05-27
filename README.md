@@ -15,7 +15,7 @@ If the last step results in issues, you can install packages in Pipfile individu
 
 # Data
 
-Data can be downloaded from the url below. Please unzip the data folder, and place it at the root (i.e. at the same level as train.py file)
+Data can be downloaded from the url below. Please unzip the data folder, and place it at the root (i.e. at the same level as train.py file).
 
 https://github.com/subtab/subtab/releases/download/0.0/data.zip
 
