@@ -86,7 +86,7 @@ class JointLoss(th.nn.Module):
         # Similarity shape: (2N, 2N)
         return similarity(x, y)
 
-    def forward(self, representation, pretext_output, pretext_label):
+    def forward(self, representation, xrecon, xorig):
         # Compute similarity matrix
         similarity = self.similarity_fn(representation, representation)
         # Get similarity scores for the positive samples from the diagonal of the first quadrant in 2Nx2N matrix
@@ -109,7 +109,7 @@ class JointLoss(th.nn.Module):
         # Loss per sample
         loss = loss / (2 * self.batch_size)
         # recontruction loss
-        recon_loss = getMSEloss(pretext_output, pretext_label) if self.options["reconstruction"] else getBCELoss(pretext_output, pretext_label)
+        recon_loss = getMSEloss(xrecon, xorig) if self.options["reconstruction"] else getBCELoss(xrecon, xorig)
         # recontruction loss for z
         zi, zj = th.split(representation, self.batch_size)
         zrecon_loss = getMSEloss(zi, zj) 
