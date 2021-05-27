@@ -32,13 +32,13 @@ class AEWrapper(nn.Module):
     def forward(self, x):
         # Forward pass on Encoder
         latent = self.encoder(x)
+        # Forward pass on Projection
         # Apply linear layer followed by non-linear activation to decouple final output, z, from representation layer h.
         z = F.leaky_relu(self.linear_layer1(latent))
         # Apply final linear layer
         z = self.linear_layer2(z)
         # Do L2 normalization
         z = F.normalize(z, p=self.options["p_norm"], dim=1) if self.options["normalize"] else z
-
         # Forward pass on decoder
         x_pretext = self.decoder(latent) 
         # Return 
