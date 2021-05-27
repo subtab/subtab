@@ -10,7 +10,7 @@ import pandas as pd
 from sklearn.utils import shuffle
 
 from utils.utils import set_seed, set_dirs
-from utils.loss_functions import NTXentLoss
+from utils.loss_functions import JointLoss
 from utils.model_plot import save_loss_plot
 from utils.model_utils import AEWrapper
 
@@ -66,7 +66,7 @@ class SubTab:
         # Get model parameters
         parameters = [model.parameters() for _, model in self.model_dict.items()]
         # Joint loss including contrastive, reconstruction and distance losses
-        self.joint_loss = NTXentLoss(self.options)
+        self.joint_loss = JointLoss(self.options)
         # Set optimizer for autoencoder
         self.optimizer_ae = self._adam(parameters, lr=self.options["learning_rate"])
         # Add items to summary to be used for reporting later
