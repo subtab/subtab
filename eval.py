@@ -139,7 +139,7 @@ def evalulate_models(data_loader, model, config, plot_suffix="_Test", mode='trai
 
 def split_and_average(x, batch_size):
     xi, xj = th.split(x, batch_size)
-    return (xi+xj)/2.0 #xi #
+    return (xi+xj)/2.0
 
 
 def main(config):
