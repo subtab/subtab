@@ -13,6 +13,13 @@ pipenv install --skip-lock     # To install required packages.
 
 If the last step results in issues, you can install packages in Pipfile individually by using pip i.e. "pip install package_name". 
 
+# Data
+
+Data can be downloaded from the url below. Please unzip the data folder, and place it at the root (i.e. at the same level as train.py file)
+
+https://github.com/subtab/subtab/releases/download/0.0/data.zip
+
+
 # Training & Evaluation
 You can train the model using:
 ```
