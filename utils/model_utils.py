@@ -21,10 +21,10 @@ class AEWrapper(nn.Module):
         self.options = options
         self.encoder = Encoder(options)
         self.decoder = Decoder(options)
-        self.projection = Projection(options)
         
-        # First linear layer, which will be followed with non-linear activation function in the forward()
         output_dim = self.options["dims"][-1]
+        # Two-Layer Projection Network
+        # First linear layer, which will be followed with non-linear activation function in the forward()
         self.linear_layer1 = nn.Linear(output_dim, output_dim)
         # Last linear layer for final projection
         self.linear_layer2 = nn.Linear(output_dim, output_dim)
@@ -40,31 +40,9 @@ class AEWrapper(nn.Module):
         z = F.normalize(z, p=self.options["p_norm"], dim=1) if self.options["normalize"] else z
 
         # Forward pass on decoder
-        if self.options["reconstruction"]:
-            x_pretext = self.decoder(latent) 
-        else: 
-            x_pretext, _ = self.projection(latent)
+        x_pretext = self.decoder(latent) 
+        # Return 
         return z, latent, x_pretext
-
-    
-class Projection(nn.Module):
-    def __init__(self, options):
-        super(Projection, self).__init__()
-        # Get configuration that contains architecture and hyper-parameters
-        self.options = copy.deepcopy(options)
-        # Input dimension of projection == latent dimension
-        input_dim, output_dim = self.options["dims"][-1],  self.options["dims"][0]
-        # First linear layer with shape (bottleneck dimension, output channel size of last conv layer in CNNEncoder)
-        self.first_layer = nn.Linear(input_dim, output_dim)
-        # Sigmoid function to get probabilities
-        self.probs = nn.Sigmoid()
-
-    def forward(self, z):
-        # batch size, latent dimension of the input
-        logits = F.relu(self.first_layer(z))
-        # Apply final linear layer to reduce dimension
-        probs = self.probs(logits)
-        return probs, logits
 
     
 class Encoder(nn.Module):
