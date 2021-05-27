@@ -19,7 +19,7 @@ def getBCELoss(prediction, label):
     bs = dims[0]
     return F.binary_cross_entropy(prediction, label, reduction ='sum')/bs
 
-class NTXentLoss(th.nn.Module):
+class JointLoss(th.nn.Module):
     """
     Modifed from: https://github.com/sthalles/SimCLR/blob/master/loss/nt_xent.py
     When computing loss, we are using a 2Nx2N similarity matrix, in which positve samples are on the diagonal of four
