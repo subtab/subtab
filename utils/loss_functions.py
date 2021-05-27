@@ -35,7 +35,7 @@ class JointLoss(th.nn.Module):
     """
 
     def __init__(self, options):
-        super(NTXentLoss, self).__init__()
+        super(JointLoss, self).__init__()
         # Assign options to self
         self.options = options
         # Batch size
