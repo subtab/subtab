@@ -24,7 +24,7 @@ th.autograd.set_detect_anomaly(True)
 
 class SubTab:
     """
-    Model: Trains an Autoencoder with a Projection network, using AEWrapper framework.
+    Model: Trains an Autoencoder with a Projection network, using SubTab framework.
     """
 
     def __init__(self, options):
