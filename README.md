@@ -1,8 +1,8 @@
 # Environment
 We used Python 3.7 for our experiments. The environment can be set up by following three steps:
 1. Install pipenv using pip
-2. Activate virtual environment
-3. Install required packages 
+2. Install required packages 
+3. Activate virtual environment
 
 You can run following commands to set up the environment:
 ```
