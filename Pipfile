@@ -18,7 +18,8 @@ tqdm = "*"
 #black = "*"
 isort = "*"
 xlrd = ">=1.0.0"
-# pywin32 = "*"
+# torch==1.5.0+cu101
+# torchvision==0.6.0+cu101
 torch = "*"
 torchvision = "*"
 pytorch-lightning = "*"
