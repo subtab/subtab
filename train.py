@@ -57,7 +57,7 @@ if __name__ == "__main__":
     # Get configuration file
     config = get_config(args)
     # Get a copy of autoencoder dimensions
-    dims = config["dims"]
+    dims = copy.deepcopy(config["dims"])
     # Summarize config and arguments on the screen as a sanity check
     print_config_summary(config, args)
     # --If True, start of MLFlow for experiment tracking:
