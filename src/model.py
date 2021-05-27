@@ -170,7 +170,7 @@ class SubTab:
             # Attach progress bar to data_loader to check it during training. "leave=True" gives a new line per epoch
             val_tqdm = tqdm(enumerate(validation_loader), total=total_batches, leave=True)
             # Go through batches
-            for i, (x, text) in val_tqdm:
+            for i, (x, _) in val_tqdm:
 
                 # Generate corrupted samples -- labels are not used
                 x_tilde_list, labels_list = self.subset_generator(x)
