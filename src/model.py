@@ -48,7 +48,7 @@ class SubTab:
         # ------Network---------
         # Instantiate networks
         print("Building the models for training and evaluation in SubTab framework...")
-        # Set Autoencoders for img and txt i.e. setting loss, optimizer, and device assignment (GPU, or CPU)
+        # Set Autoencoders i.e. setting loss, optimizer, and device assignment (GPU, or CPU)
         self.set_autoencoder()
         # Set scheduler (its use is optional)
         self._set_scheduler()
@@ -65,9 +65,9 @@ class SubTab:
         for _, model in self.model_dict.items(): model.to(self.device)
         # Get model parameters
         parameters = [model.parameters() for _, model in self.model_dict.items()]
-        # Reconstruction loss
+        # Joint loss including contrastive, reconstruction and distance losses
         self.joint_loss = NTXentLoss(self.options)
-        # Set optimizer for autoencoders
+        # Set optimizer for autoencoder
         self.optimizer_ae = self._adam(parameters, lr=self.options["learning_rate"])
         # Add items to summary to be used for reporting later
         self.summary.update({"recon_loss": []})
@@ -99,18 +99,18 @@ class SubTab:
         # Compute total number of batches per epoch
         self.total_batches = len(train_loader)
 
-        # Start joint training of Autoencoder, and/or classifier
+        # Start joint training of Autoencoder with Projection network
         for epoch in range(self.options["epochs"]):
             # Attach progress bar to data_loader to check it during training. "leave=True" gives a new line per epoch
             self.train_tqdm = tqdm(enumerate(train_loader), total=self.total_batches, leave=True)
 
             # Go through batches
-            for i, (x, text) in self.train_tqdm:
+            for i, (x, _) in self.train_tqdm:
 
-                # Generate corrupted samples
-                x_tilde_list, labels_list = self.pretext_generator(x)
+                # Generate corrupted samples -- labels are not used
+                x_tilde_list, labels_list = self.subset_generator(x)
                 
-                # zip features and labels 
+                # zip features and labels -- labels are not used
                 feature_label_pairs = zip(x_tilde_list, labels_list)
                 # Get number of subsets, and compute their combination [((xi1, yi1), (xj1, yj1)), ((xi1, yi1), (xj2, yj2))...]
                 subset_combinations = list(itertools.combinations(feature_label_pairs, 2))
@@ -155,8 +155,6 @@ class SubTab:
 
         Args:
             validation_loader (): data loader for validation set.
-            total_batches (int): total number of batches in validation set.
-
         Returns:
             float: validation loss
         """
@@ -174,10 +172,10 @@ class SubTab:
             # Go through batches
             for i, (x, text) in val_tqdm:
 
-                # Generate corrupted samples
-                x_tilde_list, labels_list = self.pretext_generator(x)
+                # Generate corrupted samples -- labels are not used
+                x_tilde_list, labels_list = self.subset_generator(x)
                 
-                # zip features and labels 
+                # zip features and labels  -- labels are not used
                 feature_label_pairs = zip(x_tilde_list, labels_list)
                 # Get number of subsets, and compute their combination [((xi1, yi1), (xj1, yj1)), ((xi1, yi1), (xj2, yj2))...]
                 subset_combinations = list(itertools.combinations(feature_label_pairs, 2))
@@ -221,26 +219,18 @@ class SubTab:
         return vloss
 
     def update_autoencoder(self, feature_label_batch_list, Xorig):
-        """Updates autoencoder model.
-
-        Args:
-            Xdata (ndarray): 2D array containing data with float type
-            dlabels (ndarray): 1D array containing data with int type
-        """
-        # Get the label used when computing loss for pretext task: 
-        # Either original features for reconstruction, or one-hot encoded labels indicating used features for prediction task
-        pretext_label = Xorig if self.options["reconstruction"] else Ytilde
+        """Updates autoencoder model"""
                 
         total_loss, contrastive_loss, recon_loss = [], [], []
         
         # pass data through model
         for (Xtilde, Ytilde) in feature_label_batch_list:
             # Forwards pass
-            z, latent, pretext_output = self.encoder(Xtilde)
+            z, latent, Xrecon = self.encoder(Xtilde)
             # If recontruct_subset is True, the output of decoder should be compared against subset (input to encoder)
-            pretext_label = Xtilde if self.options["reconstruction"] and self.options["reconstruct_subset"] else Xorig
+            Xorig_data = Xtilde if self.options["reconstruction"] and self.options["reconstruct_subset"] else Xorig
             # Compute losses
-            tloss, closs, rloss = self.joint_loss(z, pretext_output, pretext_label)
+            tloss, closs, rloss = self.joint_loss(z, Xrecon, Xorig_data)
             # Accumulate losses
             total_loss.append(tloss)
             contrastive_loss.append(closs)
@@ -267,7 +257,7 @@ class SubTab:
         mask = np.random.binomial(1, p_m, x.shape)
         return mask
 
-    def pretext_generator(self, x):
+    def subset_generator(self, x):
         """Generate corrupted samples for subsets."""
         
         n_subsets = self.options["n_subsets"]
