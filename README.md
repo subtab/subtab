@@ -7,11 +7,11 @@ We used Python 3.7 for our experiments. The environment can be set up by followi
 You can run following commands to set up the environment:
 ```
 pip install pipenv             # To install pipenv if you don't have it already
-pipenv shell                   # To activate virtual env
 pipenv install --skip-lock     # To install required packages. 
+pipenv shell                   # To activate virtual env
 ```
 
-If the last step results in issues, you can install packages in Pipfile individually by using pip i.e. "pip install package_name". 
+If the second step results in issues, you can install packages in Pipfile individually by using pip i.e. "pip install package_name". 
 
 # Data
 
