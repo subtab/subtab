@@ -130,7 +130,7 @@ def evalulate_models(data_loader, model, config, plot_suffix="_Test", mode='trai
         x_test_hat = z
         y_test = clabels[0]
         linear_model_eval(config, x_train_hat, y_train, x_test_hat, y_test,
-                          description="Trained on input original Domain-2, tested on translations from Domain-1")
+                          description="Train and Test scores:")
 
     x_train_hat = z
     y_train = clabels[0]
