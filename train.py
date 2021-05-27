@@ -56,6 +56,8 @@ if __name__ == "__main__":
     args = get_arguments()
     # Get configuration file
     config = get_config(args)
+    # Get a copy of autoencoder dimensions
+    dims = config["dims"]
     # Summarize config and arguments on the screen as a sanity check
     print_config_summary(config, args)
     # --If True, start of MLFlow for experiment tracking:
@@ -69,5 +71,7 @@ if __name__ == "__main__":
     else:
         # Run Training - with or without profiler
         run_with_profiler(main, config) if config["profile"] else main(config)
+        # Reset the autoencoder dimension since it was changed in train.py
+        config["dims"] = dims
         # Run Evaluation
         eval.main(config)
