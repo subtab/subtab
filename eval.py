@@ -92,7 +92,7 @@ def evalulate_models(data_loader, model, config, plot_suffix="_Test", mode='trai
         Xorig = model.process_batch(x, x)
 
         # Generate corrupted samples
-        x_tilde_list, labels_list = model.pretext_generator(x)
+        x_tilde_list, labels_list = model.subset_generator(x)
                 
         # zip features and labels 
         feature_label_pairs = zip(x_tilde_list, labels_list)
