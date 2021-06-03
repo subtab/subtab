@@ -64,12 +64,12 @@ def linear_model_eval(config, X_train, y_train, X_test, y_test, use_scaler=False
     
 
 def plot_clusters(config, z, clabels, plot_suffix="_inLatentSpace"):
-    # Number of columns for legends, where each column corresponds to a cluster/cohort
+    # Number of columns for legends, where each column corresponds to a cluster
     ncol = len(list(set(clabels)))
-    # clegends = ["A", "B", "C", "D", ...]..choose first ncol characters, one per coluster
+    # clegends = ["A", "B", "C", "D", ...]..choose first ncol characters, one per cluster
     clegends = list("0123456789")[0:ncol]
 
-    # Show cohorts only
+    # Show clusters only
     visualise_clusters(config, z, clabels, plt_name="classes" + plot_suffix, legend_title="Classes", legend_labels=clegends)
 
 
@@ -81,7 +81,7 @@ def visualise_clusters(config, embeddings, labels, plt_name="test", alpha=1.0, l
     :param plt_name: Name to be used when saving the plot.
     :return: None
     """
-    # Define colors to be used for each class/cluster/cohort
+    # Define colors to be used for each class/cluster
     color_list = ['#66BAFF', '#FFB56B', '#8BDD89', '#faa5f3', '#fa7f7f',
                   '#008cff', '#ff8000', '#04b000', '#de4bd2', '#fc3838',
                   '#004c8b', "#964b00", "#026b00", "#ad17a1", '#a80707',
@@ -93,10 +93,10 @@ def visualise_clusters(config, embeddings, labels, plt_name="test", alpha=1.0, l
                    "#faa5f3", "#de4bd2", "#ad17a1", "#570950",
                    '#fa7f7f', '#fc3838', '#a80707', '#732929']
 
-    # If there are more than 3 types of labels, we want to plot both cohort, and domains, so change color scheme.
+    # If there are more than 3 types of labels, change color scheme. -- Not Used
     color_list = color_list2 if len(list(set(labels))) > config["n_classes"] + 1 else color_list
 
-    # Map class to legend texts. "A1" = Cohort-A in Domain-1
+    # Map class to legend texts. -- Not Used
     c2l = {"0": "A1", "1": "A2", "2": "A3", "3": "A4",
            "4": "B1", "5": "B2", "6": "B3", "7": "B4",
            "8": "C1", "9": "C2", "10": "C3", "11": "C4",
@@ -187,24 +187,11 @@ def overwrite_legends(sns_plt, c2l, fig, ncol, title=None, labels=None):
     # Overwrite new_labels if it is given by user.
     new_labels = labels or new_labels
     # Define the figure title
-    title = title or "Cohorts/Domains"
+    title = title or "Cluster"
     # Overwrite the legend labels and add a title to the legend
     fig.legend(handles, new_labels, loc="center right", borderaxespad=0.1, title=title, ncol=ncol)
     sns_plt.set(xticklabels=[], yticklabels=[], xlabel=None, ylabel=None)
     sns_plt.tick_params(top=False, bottom=False, left=False, right=False)
-
-
-def domain_labels_for_tranlation(options, domain_label=[2]):
-    # Assign each domain to a label: domain-1:0, domain-2:1 and so on.
-    domain_labels = []
-    # Repeat each for number of batch size so that we have label for each data point from each domain
-    domain_labels = options["n_domains"] * options["batch_size"] * domain_label
-    # Turn labels to torch tensor
-    domain_labels = th.from_numpy(np.array(domain_labels))
-    # Turn them into one-hot embeddings, shape: (3 x batch_size, number of domains)
-    y = th.eye(options["n_domains"])
-    # Return one-hot encoded domain labels
-    return y[domain_labels].to(options["device"])
 
 
 def save_np2csv(np_list, save_as="test.csv"):
@@ -245,7 +232,3 @@ def concatenate_lists(list_of_lists):
         list_of_np_arrs.append(np.concatenate(list_))
     # Return numpy arrays
     return list_of_np_arrs
-
-
-def get_translated_outputs(Xtran, dlabels_raw):
-    return Xtran[dlabels_raw == 0], Xtran[dlabels_raw == 1], Xtran[dlabels_raw == 2]
