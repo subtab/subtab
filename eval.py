@@ -61,14 +61,14 @@ def evalulate_models(data_loader, model, config, plot_suffix="_Test", mode='trai
     print(f"Dataset used: {config['dataset']}")
     print(f"{100 * '='}\n{100 * '='}")
 
-    # Get Autoencoders for both modalities
+    # Get the model
     encoder = model.encoder
-    # Move the models to the device
+    # Move the model to the device
     encoder.to(config["device"])
-    # Set models to evaluation mode
+    # Set the model to evaluation mode
     encoder.eval()
 
-    # Get data loaders for three datasets
+    # Get data loaders
     train_loader, test_loader, validation_loader = data_loader.train_loader, data_loader.test_loader, data_loader.validation_loader
     # Choose either training, or test data loader
     if mode == 'train':
@@ -143,7 +143,7 @@ def split_and_average(x, batch_size):
 
 
 def main(config):
-    # Ser directories (or create if they don't exist)
+    # Set directories (or create if they don't exist)
     set_dirs(config)
     # Get data loader for first dataset.
     ds_loader = Loader(config, dataset_name=config["dataset"])
