@@ -48,7 +48,7 @@ class AEWrapper(nn.Module):
 class Encoder(nn.Module):
     """
     :param dict options: Generic dictionary to configure the model for training.
-    :return: (mean, logvar) if in VAE mode. Else it return (z, z).
+    :return: h - representation.
 
     Encoder model.
     """
