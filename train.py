@@ -41,7 +41,7 @@ def train(config, data_loader, save_weights=True):
 
         
 def main(config):
-    # Ser directories (or create if they don't exist)
+    # Set directories (or create if they don't exist)
     set_dirs(config)
     # Get data loader for first dataset.
     ds_loader = Loader(config, dataset_name=config["dataset"])
