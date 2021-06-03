@@ -41,7 +41,7 @@ class SubTab:
         self.model_dict, self.summary = {}, {}
         # Set random seed
         set_seed(self.options)
-        # Set paths for results and Initialize some arrays to collect data during training
+        # Set paths for results and initialize some arrays to collect data during training
         self._set_paths()
         # Set directories i.e. create ones that are missing.
         set_dirs(self.options)
@@ -83,14 +83,14 @@ class SubTab:
     def fit(self, data_loader):
         """Fits model to the data"""
         
-        # Get data loaders for three datasets
+        # Get data loaders
         train_loader = data_loader.train_loader
         validation_loader = data_loader.validation_loader
 
-        # Placeholders for record batch losses
+        # Placeholders to record losses per batch
         self.loss = {"tloss_b": [], "tloss_e": [], "vloss_e": [], "closs_b": [], "rloss_b": []}
 
-        # Turn on training mode for each model.
+        # Turn on training mode for the model.
         self.set_mode(mode="training")
 
         # Compute total number of batches per epoch
@@ -127,17 +127,17 @@ class SubTab:
 
                 # 1 - Update log message using epoch and batch numbers
                 self.update_log(epoch, i)
-                # 2 - Clean-up for efficient memory use.
+                # 2 - Clean-up for efficient memory usage.
                 gc.collect()
 
-            # Validate every nth epoch. n=1 by default
+            # Validate every nth epoch. n=1 by default, but it can be changed in the config file
             if epoch % self.options["nth_epoch"] == 0 and self.options["validate"]:
                 # Compute validation loss
                 _ = self.validate(validation_loader)
                 # Get reconstruction loss for training per epoch
             self.loss["tloss_e"].append(sum(self.loss["tloss_b"][-self.total_batches:-1]) / self.total_batches)
             
-            # Change learning rate if schedular=True
+            # Change learning rate if scheduler==True
             _ = self.scheduler.step() if self.options["scheduler"] else None
         
         # Save plot of training and validation losses
@@ -264,9 +264,9 @@ class SubTab:
         # Number of overlapping features between subsets
         n_overlap = int(overlap*n_column_subset)
         
-        # Randomly (and column-wise) shuffle data
+        # Get the range over the number of features
         column_idx = list(range(n_column))
-        # Get a permutation for order of subsets
+        # Permutate the order of subsets to avoid any bias during training
         permuted_order = np.random.permutation(n_subsets)
         # Pick subset of columns (equivalent of cropping)
         subset_column_idx_list = []
@@ -421,7 +421,7 @@ class SubTab:
         self._loss_path = os.path.join(self._results_path, "training", self.options["model_mode"], "loss")
 
     def _adam(self, params, lr=1e-4):
-        """Sets up Adam optimizer using model params"""
+        """Sets up AdamW optimizer using model params"""
         return th.optim.AdamW(itertools.chain(*params), lr=lr, betas=(0.9, 0.999), eps=1e-07)
 
     def _tensor(self, data):
